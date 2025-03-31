@@ -16,9 +16,9 @@
   "esmodules": ["scripts/youtube-sync.js"],
   "styles": ["styles/youtube-sync.css"],
   "socket": true,
-  "url": "https://github.com/tuoUsername/foundry-youtube-sync",
-  "manifest": "https://raw.githubusercontent.com/tuoUsername/foundry-youtube-sync/master/module.json",
-  "download": "https://github.com/tuoUsername/foundry-youtube-sync/archive/v1.0.0.zip",
+  "url": "https://github.com/dinoapicella/foundry-youtube-sync",
+  "manifest": "https://github.com/dinoapicella/foundry-youtube-sync/releases/latest/download/manifest.json",
+  "download": "https://github.com/dinoapicella/foundry-youtube-sync/releases/latest/download/module.zip",
   "languages": [
     {
       "lang": "it",
