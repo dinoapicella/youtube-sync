@@ -17,7 +17,7 @@
   "styles": ["styles/youtube-sync.css"],
   "socket": true,
   "url": "https://github.com/dinoapicella/foundry-youtube-sync",
-  "manifest": "https://github.com/dinoapicella/foundry-youtube-sync/releases/latest/download/manifest.json",
+  "manifest": "https://github.com/dinoapicella/foundry-youtube-sync/releases/download/1.0.0/module.json",
   "download": "https://github.com/dinoapicella/foundry-youtube-sync/releases/1.0.0/download/module.zip",
   "languages": [
     {
