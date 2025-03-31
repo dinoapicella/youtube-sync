@@ -1,1 +1,1 @@
-# foundry-youtube-sync
+# youtube-sync
