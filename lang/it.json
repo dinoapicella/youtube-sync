@@ -1,0 +1,24 @@
+{
+  "youtube-sync": {
+    "settings": {
+      "apiKey": {
+        "name": "YouTube API Key",
+        "hint": "Opzionale: Inserisci la tua YouTube API key per funzionalità avanzate"
+      }
+    },
+    "dialog": {
+      "title": "YouTube Sync",
+      "urlLabel": "URL del video di YouTube:",
+      "playButton": "Riproduci",
+      "cancelButton": "Annulla"
+    },
+    "controls": {
+      "play": "Play",
+      "pause": "Pausa",
+      "stop": "Stop"
+    },
+    "errors": {
+      "invalidUrl": "URL di YouTube non valido"
+    }
+  }
+}
