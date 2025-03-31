@@ -1,16 +1,16 @@
 {
-  "id": "youtube-sync",
-  "name": "youtube-sync",
-  "title": "YouTube Sync",
-  "description": "Modulo che permette di condividere e sincronizzare video di YouTube tra GM e giocatori",
+  "id": "foundry-youtube-sync",
+  "name": "foundry-youtube-sync",
+  "title": "Foundry YouTube Sync",
+  "description": "This module allows sharing and synchronizing YouTube videos between GMs and players",
   "version": "1.0.0",
   "compatibility": {
-    "minimum": 10,
+    "minimum": 12,
     "verified": 12
   },
   "authors": [
     {
-      "name": "Il tuo nome"
+      "name": "dinoapicella"
     }
   ],
   "esmodules": ["scripts/youtube-sync.js"],
