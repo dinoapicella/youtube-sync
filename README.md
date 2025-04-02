@@ -1,4 +1,4 @@
-# Foundry YouTube Player
+# Foundry Simple YouTube Player
 
 ## 📋 Overview
 
