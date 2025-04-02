@@ -211,9 +211,10 @@
   $(document).ready(function() {
     const header = $('.youtube-sync-window .window-header');
     
-    if (!header.find('.minimize-button').length) {
-      header.find('.close').before('<a class="minimize-button"><i class="fas fa-compress"></i></a>');
-      header.find('.close').before('<a class="maximize-button"><i class="fas fa-expand"></i></a>');
-    }
+    // Rimuoviamo solo l'aggiunta dei pulsanti visibili, mantenendo la funzionalità
+    // if (!header.find('.minimize-button').length) {
+    //   header.find('.close').before('<a class="minimize-button"><i class="fas fa-compress"></i></a>');
+    //   header.find('.close').before('<a class="maximize-button"><i class="fas fa-expand"></i></a>');
+    // }
   });
 </script>

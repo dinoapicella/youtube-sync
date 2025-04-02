@@ -196,8 +196,23 @@ class YouTubeSync {
     if (existingApp) {
       existingApp.updateVideo(videoId);
       existingApp.render(true);
+      
+      // Forziamo l'applicazione delle dimensioni anche quando aggiorniamo una finestra esistente
+      setTimeout(() => {
+        existingApp.position.width = 960;
+        existingApp.position.height = 720;
+        existingApp.setPosition(existingApp.position);
+      }, 100);
     } else {
-      new YouTubePlayerApp(videoId).render(true);
+      const app = new YouTubePlayerApp(videoId);
+      app.render(true);
+      
+      // Forziamo l'applicazione delle dimensioni quando creiamo una nuova finestra
+      setTimeout(() => {
+        app.position.width = 960;
+        app.position.height = 720;
+        app.setPosition(app.position);
+      }, 100);
     }
   }
   
@@ -254,8 +269,8 @@ class YouTubePlayerApp extends Application {
       id: 'youtube-player-window', 
       title: 'YouTube Sync Player',
       template: YouTubeSync.TEMPLATES.youtubePlayer,
-      width: 640,
-      height: 510,
+      width: 960,
+      height: 720,
       resizable: true,
       popOut: true,
       minimizable: true,
@@ -311,6 +326,13 @@ class YouTubePlayerApp extends Application {
     
     html.find('.minimize-button').on('click', this._toggleMinimize.bind(this));
     html.find('.maximize-button').on('click', this._toggleMinimize.bind(this));
+    
+    // Forziamo l'applicazione delle dimensioni quando la finestra viene inizializzata
+    setTimeout(() => {
+      this.position.width = 960;
+      this.position.height = 720;
+      this.setPosition(this.position);
+    }, 100);
     
     if (game.user.isGM) {
       html.find('.youtube-control').on('click', this._onControlClick.bind(this));
@@ -396,9 +418,17 @@ class YouTubePlayerApp extends Application {
     html.find('.minimize-button').show();
     html.find('.maximize-button').hide();
     
-    this.position.width = 640;
-    this.position.height = 640;
+    // Forziamo l'applicazione delle dimensioni
+    this.position.width = 960;
+    this.position.height = 720;
     this.setPosition(this.position);
+    
+    // Aggiungiamo un timeout per assicurarci che le dimensioni vengano applicate
+    setTimeout(() => {
+      this.position.width = 960;
+      this.position.height = 720;
+      this.setPosition(this.position);
+    }, 100);
     
     if (this.player) {
       this.player.playVideo();
