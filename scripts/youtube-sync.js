@@ -109,7 +109,7 @@ class YouTubeSync {
             <label>YouTube URL:</label>
             <div class="youtube-url-input-wrapper">
               <i class="fab fa-youtube youtube-icon"></i>
-              <input type="text" name="youtubeUrl" placeholder="Youtube URL...">
+              <input type="text" name="youtubeUrl" placeholder="Insert here Youtube URL...">
             </div>
           </div>
         </form>
@@ -156,13 +156,13 @@ class YouTubeSync {
               this.createPlayerWindow(videoId);
               this.broadcastVideo(videoId);
             } else {
-              ui.notifications.error('URL non valido');
+              ui.notifications.error('URL not valid');
             }
           }
         },
         cancel: {
           icon: '<i class="fas fa-times"></i>',
-          label: 'Annulla'
+          label: 'Cancel'
         }
       },
       default: 'play',
@@ -196,8 +196,7 @@ class YouTubeSync {
     if (existingApp) {
       existingApp.updateVideo(videoId);
       existingApp.render(true);
-      
-      // Forziamo l'applicazione delle dimensioni anche quando aggiorniamo una finestra esistente
+      //Force resize
       setTimeout(() => {
         existingApp.position.width = 960;
         existingApp.position.height = 720;
@@ -207,7 +206,6 @@ class YouTubeSync {
       const app = new YouTubePlayerApp(videoId);
       app.render(true);
       
-      // Forziamo l'applicazione delle dimensioni quando creiamo una nuova finestra
       setTimeout(() => {
         app.position.width = 960;
         app.position.height = 720;
@@ -418,12 +416,10 @@ class YouTubePlayerApp extends Application {
     html.find('.minimize-button').show();
     html.find('.maximize-button').hide();
     
-    // Forziamo l'applicazione delle dimensioni
     this.position.width = 960;
     this.position.height = 720;
     this.setPosition(this.position);
     
-    // Aggiungiamo un timeout per assicurarci che le dimensioni vengano applicate
     setTimeout(() => {
       this.position.width = 960;
       this.position.height = 720;
