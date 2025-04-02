@@ -3,7 +3,7 @@
     "settings": {
       "apiKey": {
         "name": "YouTube API Key",
-        "hint": "Opzionale: Inserisci la tua YouTube API key per funzionalità avanzate"
+        "hint": "Opzionale: Inserisci la tua YouTube API key per funzionalità avanzate. Allo stato attuale non serve"
       }
     },
     "dialog": {

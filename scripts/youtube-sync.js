@@ -109,7 +109,7 @@ class YouTubeSync {
             <label>YouTube URL:</label>
             <div class="youtube-url-input-wrapper">
               <i class="fab fa-youtube youtube-icon"></i>
-              <input type="text" name="youtubeUrl" placeholder="Incolla qui l'URL del video...">
+              <input type="text" name="youtubeUrl" placeholder="Youtube URL...">
             </div>
           </div>
         </form>
@@ -290,10 +290,10 @@ class YouTubePlayerApp extends Application {
       if (this.player && this.player.getVideoData) {
         try {
           const data = this.player.getVideoData();
-          this.videoTitle = data.title || "Video YouTube";
+          this.videoTitle = data.title || "YouTube video";
           this.element.find('.window-title').text(this.videoTitle);
         } catch (e) {
-          console.warn("Impossibile ottenere i dati del video:", e);
+          console.warn("fetchvideoinfo error :", e);
         }
       }
     }, 1000);
@@ -350,7 +350,7 @@ class YouTubePlayerApp extends Application {
       windowContent.append(`
         <div class="minimized-view">
           <img src="${this.videoThumbnail}" alt="Thumbnail" />
-          <div class="minimized-title">${this.videoTitle || "Video YouTube"}</div>
+          <div class="minimized-title">${this.videoTitle || "YouTube Video"}</div>
         </div>
       `);
       
@@ -397,7 +397,7 @@ class YouTubePlayerApp extends Application {
     html.find('.maximize-button').hide();
     
     this.position.width = 640;
-    this.position.height = 510;
+    this.position.height = 640;
     this.setPosition(this.position);
     
     if (this.player) {
