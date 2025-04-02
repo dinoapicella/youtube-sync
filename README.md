@@ -8,6 +8,10 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 
 ---
 
+<p align="center">
+  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTU4MTJpbW9ocjQ5NjhkdjZ0YmpoeWNhbnMxOW45MXl3b2oycGFzNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ucowyApLz4egTezkkx/giphy.gif" width="800" alt="Example Demo">
+</p>
+
 ## ✨ Features
 
 - ▶️ Play YouTube videos by simply pasting a URL
