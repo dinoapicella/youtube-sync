@@ -196,21 +196,9 @@ class YouTubeSync {
     if (existingApp) {
       existingApp.updateVideo(videoId);
       existingApp.render(true);
-      //Force resize
-      setTimeout(() => {
-        existingApp.position.width = 960;
-        existingApp.position.height = 720;
-        existingApp.setPosition(existingApp.position);
-      }, 100);
     } else {
       const app = new YouTubePlayerApp(videoId);
       app.render(true);
-      
-      setTimeout(() => {
-        app.position.width = 960;
-        app.position.height = 720;
-        app.setPosition(app.position);
-      }, 100);
     }
   }
   
@@ -256,23 +244,31 @@ class YouTubePlayerApp extends Application {
     this.videoId = videoId;
     this.player = null;
     this.apiReady = false;
-    this.currentVolume = 100; // Default volume level
-    this.isMinimized = game.settings.get(YouTubeSync.ID, 'minimizedState');
+    this.currentVolume = 100;
+    this.isMinimized = true; // Always start minimized
     this.videoTitle = "";
     this.videoThumbnail = "";
   }
 
   static get defaultOptions() {
+    // Calculate minimum dimensions based on 16:9 aspect ratio
+    const minHeight = 180; // Minimum height we want for the video
+    const minWidth = Math.ceil(minHeight * (16/9)); // Calculate width to maintain aspect ratio
+    const gmExtraHeight = 30; // Extra height for GM controls
+    const gmExtraSize = 80; // Extra size for GM window (increased from 100)
+    const clientExtraHeight = 0; // Extra height for client window
+    
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: 'youtube-player-window', 
       title: 'YouTube Sync Player',
       template: YouTubeSync.TEMPLATES.youtubePlayer,
-      width: 960,
-      height: 720,
-      resizable: true,
+      width: game.user.isGM ? minWidth + gmExtraSize : minWidth,
+      height: game.user.isGM ? minHeight + gmExtraHeight + gmExtraSize : minHeight + clientExtraHeight,
+      resizable: false, // Disable resizing for everyone
       popOut: true,
-      minimizable: true,
-      classes: ['youtube-sync-window']
+      minimizable: false,
+      classes: ['youtube-sync-window'],
+      closeOnDblClick: false
     });
   }
   
@@ -318,161 +314,156 @@ class YouTubePlayerApp extends Application {
   activateListeners(html) {
     super.activateListeners(html);
     
-    console.log("YouTubePlayerApp | Activating listeners");
+    // Prevent double-click minimization
+    html.find('.window-header').on('dblclick', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    });
     
-    this._initPlayer();
+    // Prevent window from being minimized by double-clicking the title
+    html.find('.window-title').on('dblclick', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    });
     
-    html.find('.minimize-button').on('click', this._toggleMinimize.bind(this));
-    html.find('.maximize-button').on('click', this._toggleMinimize.bind(this));
+    // Make header more compact
+    html.find('.window-header').css({
+      'padding': '2px 5px',
+      'height': '20px',
+      'cursor': 'move'
+    });
     
-    // Forziamo l'applicazione delle dimensioni quando la finestra viene inizializzata
-    setTimeout(() => {
-      this.position.width = 960;
-      this.position.height = 720;
-      this.setPosition(this.position);
-    }, 100);
+    // Calculate minimum dimensions based on aspect ratio
+    const minHeight = 180;
+    const minWidth = Math.ceil(minHeight * (16/9));
+    const controlsHeight = 30; // Height for GM controls
+    const playerExtraHeight = 20; // Extra height for player
+    const clientExtraHeight = 200; // Extra height for client window
     
+    // Make window content more compact
+    html.find('.window-content').css({
+      'padding': '0',
+      'height': (game.user.isGM ? minHeight + controlsHeight + 200 : minHeight + clientExtraHeight) + 'px',
+      'overflow': 'hidden',
+      'min-height': minHeight + 'px',
+      'position': 'relative'
+    });
+    
+    // Ensure player container is properly sized
+    html.find('#youtube-player').css({
+      'width': '100%',
+      'height': 'calc(100% - ' + (game.user.isGM ? controlsHeight : 0) + 'px + ' + playerExtraHeight + 'px)',
+      'overflow': 'hidden',
+      'min-height': minHeight + playerExtraHeight + 'px',
+      'position': 'relative'
+    });
+
+    // Style GM controls
     if (game.user.isGM) {
+      html.find('.youtube-controls').css({
+        'position': 'absolute',
+        'bottom': '0',
+        'left': '0',
+        'right': '0',
+        'background': 'rgba(0, 0, 0, 0.7)',
+        'padding': '5px',
+        'z-index': '1000',
+        'display': 'flex',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'gap': '5px',
+        'width': '100%',
+        'box-sizing': 'border-box',
+        'height': controlsHeight + 'px'
+      });
+
+      // Make controls more compact
+      html.find('.youtube-control').css({
+        'padding': '2px 5px',
+        'font-size': '0.8em'
+      });
+
       html.find('.youtube-control').on('click', this._onControlClick.bind(this));
       html.find('#youtube-volume').on('input', this._onVolumeChange.bind(this));
-    }
-    
-    if (this.isMinimized) {
-      this._applyMinimizedState(html);
-    }
-  }
-  
-  _toggleMinimize(event) {
-    event.preventDefault();
-    this.isMinimized = !this.isMinimized;
-    
-    game.settings.set(YouTubeSync.ID, 'minimizedState', this.isMinimized);
-    
-    if (this.isMinimized) {
-      this._applyMinimizedState(this.element);
     } else {
-      this._applyExpandedState(this.element);
-    }
-  }
-  
-  _applyMinimizedState(html) {
-    const windowContent = html.find('.window-content');
-    const header = html.find('.window-header');
-    
-    if (!game.user.isGM) {
       html.find('.youtube-controls').hide();
-    } else {
-      const controls = html.find('.youtube-controls');
-      controls.addClass('minimized-controls');
     }
     
-    if (!html.find('.minimized-view').length) {
-      windowContent.append(`
-        <div class="minimized-view">
-          <img src="${this.videoThumbnail}" alt="Thumbnail" />
-          <div class="minimized-title">${this.videoTitle || "YouTube Video"}</div>
-        </div>
-      `);
-      
-      if (game.user.isGM) {
-        html.find('style').append(`
-          .minimized-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            background: rgba(34, 34, 34, 0.8);
-            border-radius: 6px;
-            padding: 8px;
-            margin: 0 10px;
-            z-index: 10;
-          }
-          .minimized-view {
-            padding-bottom: 60px;
-          }
-        `);
-      }
-    } else {
-      html.find('.minimized-view').show();
-    }
+    // Remove resize handler since resizing is disabled
+    this.element.off('resize');
     
-    html.find('.minimize-button').hide();
-    html.find('.maximize-button').show();
-    
-    this.position.width = 300;
-    this.position.height = game.user.isGM ? 240 : 180; // GM have controls 
-    this.setPosition(this.position);
+    this._initPlayer();
   }
   
-  _applyExpandedState(html) {
-    html.find('#youtube-player').show();
-    
-    if (game.user.isGM) {
-      html.find('.youtube-controls').removeClass('minimized-controls');
+  _updateVideoSize() {
+    const playerElement = this.element.find('#youtube-player');
+    if (playerElement.length && this.player) {
+      const containerWidth = playerElement.width();
+      const containerHeight = playerElement.height();
+      
+      // Calculate dimensions based on 16:9 aspect ratio
+      const videoRatio = 16/9;
+      const containerRatio = containerWidth / containerHeight;
+      
+      let width, height;
+      
+      if (containerRatio > videoRatio) {
+        // Container is wider than video
+        height = containerHeight;
+        width = height * videoRatio;
+      } else {
+        // Container is taller than video
+        width = containerWidth;
+        height = width / videoRatio;
+      }
+      
+      // Update iframe size
+      const iframe = playerElement.find('iframe');
+      if (iframe.length) {
+        iframe.css({
+          width: width + 'px',
+          height: height + 'px',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          border: 'none',
+          margin: '0',
+          padding: '0'
+        });
+      }
     }
-
-    html.find('.minimized-view').hide();
-    
-    html.find('.minimize-button').show();
-    html.find('.maximize-button').hide();
-    
-    this.position.width = 960;
-    this.position.height = 720;
-    this.setPosition(this.position);
-    
-    setTimeout(() => {
-      this.position.width = 960;
-      this.position.height = 720;
-      this.setPosition(this.position);
-    }, 100);
+  }
+  
+  _initPlayer() {
+    if (!this.videoId) return;
     
     if (this.player) {
-      this.player.playVideo();
-    }
-  }
-  
-  async _initPlayer() {
-    console.log("YouTubePlayerApp | Initializing player");
-    
-    if (!window.youtubeAPIReady) {
-      await YouTubeSync._loadYouTubeAPI();
-    } else {
-      await window.youtubeAPIReady;
+      this.player.destroy();
     }
     
-    this.apiReady = true;
-    
-    if (this.videoId && document.getElementById('youtube-player')) {
-      console.log("YouTubePlayerApp | Creating YT.Player with videoId:", this.videoId);
-      
-      try {
-        this.player = new YT.Player('youtube-player', {
-          height: '100%',
-          width: '100%',
-          videoId: this.videoId,
-          playerVars: {
-            'autoplay': 1,
-            'controls': game.user.isGM ? 1 : 0,
-            'enablejsapi': 1,
-            'rel': 0,
-            'origin': window.location.origin
-          },
-          events: {
-            'onReady': this._onPlayerReady.bind(this),
-            'onStateChange': this._onPlayerStateChange.bind(this),
-            'onError': this._onPlayerError.bind(this)
-          }
-        });
-        console.log("YouTubePlayerApp | Player created:", this.player);
-        
-        this.fetchVideoInfo(this.videoId);
-        
-      } catch (error) {
-        console.error("YouTubePlayerApp | Error creating player:", error);
+    this.player = new YT.Player('youtube-player', {
+      height: '100%',
+      width: '100%',
+      videoId: this.videoId,
+      playerVars: {
+        'autoplay': 1,
+        'controls': game.user.isGM ? 1 : 0,
+        'enablejsapi': 1,
+        'rel': 0,
+        'origin': window.location.origin,
+        'modestbranding': 1,
+        'showinfo': 0,
+        'fs': 0
+      },
+      events: {
+        'onReady': this._onPlayerReady.bind(this),
+        'onStateChange': this._onPlayerStateChange.bind(this),
+        'onError': this._onPlayerError.bind(this)
       }
-    } else {
-      console.warn("YouTubePlayerApp | Cannot initialize player: missing videoId or container element");
-    }
+    });
   }
   
   _onPlayerReady(event) {
