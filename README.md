@@ -1,4 +1,4 @@
-# Foundry Simple YouTube Player
+# Foundry YouTube Player
 
 ## 📋 Overview
 
@@ -7,10 +7,6 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 > **Developer's Note:** This module is functional but aesthetically basic. Updates will be infrequent or non-existent due to time constraints between work and personal life. I created this primarily to share a practical solution with the Foundry community that has helped me in my own games.
 
 ---
-
-<p align="center">
-  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTU4MTJpbW9ocjQ5NjhkdjZ0YmpoeWNhbnMxOW45MXl3b2oycGFzNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ucowyApLz4egTezkkx/giphy.gif" width="800" alt="Example Demo">
-</p>
 
 ## ✨ Features
 
@@ -54,6 +50,7 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 - Players can currently pause the video from their end (this is a bug that will be addressed in a future update)
 - The interface is functional but not aesthetically polished
 - Some controls might be a bit cumbersome to use
+- If a user login when the youtube widget is running they dont see it. The GM MUST restart it
 
 ---
 
@@ -73,7 +70,6 @@ Unfortunately, there is **no workaround** for these YouTube restrictions. If a v
 ## 💡 Recommendations
 
 ### For Players:
-- **Double-click the top bar** to minimize the video window
 - Focus on your game without worrying about video controls
 - If you experience Error 150, let your GM know so they can try another video
 
