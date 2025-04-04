@@ -66,7 +66,7 @@ This is due to YouTube's content restrictions and embedding policies, which vary
 
 Unfortunately, there is **no workaround** for these YouTube restrictions. If a video doesn't play for some players, the only solution is to try a different video. This is not an issue with the module itself but with YouTube's platform policies.
 
-Additionally, the player cannot be resized due to YouTube's policies, which require the video to always remain in the foreground.
+Additionally, the player cannot be resized due to YouTube's policies, which require the video to always remain in the foreground, unless someone changes the window size in the inspect tool, but I take no responsibility for that.
 
 ---
 
