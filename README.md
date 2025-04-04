@@ -19,7 +19,6 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
   - Volume adjustment
   - Video progression
 - 🌐 All controls are applied to every player's video simultaneously
-- 🔽 Players can minimize the video window by double-clicking on the top bar
 - ❌ Players can close the popup if desired and pause the video if they click on it(known bugs, to be fixed)
 
 ---
@@ -43,7 +42,6 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 | 1️⃣ | Paste a YouTube URL in the input popup |
 | 2️⃣ | Use the control bar below the video for play, pause, stop, and volume control |
 | 3️⃣ | Only use YouTube's native controls when you need to select a specific video segment |
-| 4️⃣ | Players should minimize the window by double-clicking the top bar |
 
 ---
 
