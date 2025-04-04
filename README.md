@@ -51,6 +51,7 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 - The interface is functional but not aesthetically polished
 - Some controls might be a bit cumbersome to use
 - If a user login when the youtube widget is running they dont see it. The GM MUST restart it
+- With multiple GMs, some methods are called multiple times, and the video audio tries to sync multiple times, resulting in a choppy and unclear experience.
 
 ---
 
