@@ -6,6 +6,8 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 
 > **Developer's Note:** This module is functional but aesthetically basic. Updates will be infrequent or non-existent due to time constraints between work and personal life. I created this primarily to share a practical solution with the Foundry community that has helped me in my own games.
 
+<p align="center"> <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTBscGRlbTBqbDNjbjI4dDh2czdpMnh3bDFuaXVucG1yODFwdnUycCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cjLqH1e9JRQBxcQitL/giphy.gif" width="800" alt="Example Demo"> </p>
+
 ---
 
 ## ✨ Features
