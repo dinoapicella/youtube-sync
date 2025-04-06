@@ -1,4 +1,11 @@
 # Foundry YouTube Player
+<div align="center">
+  <img src="https://img.shields.io/github/downloads/dinoapicella/youtube-sync/total?color=2b82fc&label=Downloads&style=for-the-badge" alt="Total Downloads">
+  <img src="https://img.shields.io/github/v/release/dinoapicella/youtube-sync?color=2b82fc&label=Latest%20Release&style=for-the-badge" alt="Latest Release">
+  <a href="https://ko-fi.com/dinoapicella">
+    <img src="https://img.shields.io/badge/Ko--fi-Support%20Development-%23FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Support on Ko-fi">
+  </a>
+</div>
 
 ## 📋 Overview
 
