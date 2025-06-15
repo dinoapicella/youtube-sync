@@ -66,7 +66,6 @@ static hookIntoFoundry() {
   // ADD YOUTBE BUTTON FOR GMs
  Hooks.on('getSceneControlButtons', (controls) => {
     if (game?.version?.startsWith('13')) {
-      console.log("VERSIONE 13")
       // --- v13 --- 
       if (game.user.isGM && controls?.tokens?.tools) {
         controls.tokens.tools.youtube = { 
