@@ -2,7 +2,7 @@
    "id":"youtube-sync",
    "title":"YouTube Sync",
    "description":"This module allows sharing and synchronizing YouTube videos between GMs and players",
-   "version":"1.0.0",
+   "version":"1.0.1",
    "compatibility":{
       "minimum":"12.331",
       "verified":"12.331"
