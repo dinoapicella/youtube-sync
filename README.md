@@ -94,7 +94,8 @@ Additionally, the player cannot be resized due to YouTube's policies, which requ
 
 | Foundry Version | Module Version | Compatible |
 |-----------------|----------------|------------|
-| V12             | v1.0.0         | ✅          |
+| V13             | v1.0.1         | ✅          |
+| V12             | v1.0.0/v1.0.1         | ✅          |
 | V11              | v1.0.0         | ❓ (untested) |
 | V10              | v1.0.0         | ❓ (untested) |
 
