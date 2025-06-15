@@ -55,9 +55,7 @@
    "esmodules":[
       "scripts/youtube-sync.js"
    ],
-   "styles":[
-      ""
-   ],
+   "styles":[],
    "socket":true,
    "url":"https://github.com/dinoapicella/foundry-youtube-sync",
    "manifest":"https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.1/module.json",
