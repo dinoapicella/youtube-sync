@@ -36,7 +36,7 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 2. Click "Install Module"
 3. Search for "Foundry YouTube Player" or paste this URL:
    ```
-   https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.0/module.json
+   https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.1/module.json
    ```
 4. Click "Install"
 
