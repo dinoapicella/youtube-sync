@@ -62,10 +62,25 @@ class YouTubeSync {
     });
   }
   
-  static hookIntoFoundry() {
-    // Add GM Bar Youtube button
-    Hooks.on('getSceneControlButtons', (controls) => {
-      if (game.user.isGM) {
+static hookIntoFoundry() {
+  // ADD YOUTBE BUTTON FOR GMs
+ Hooks.on('getSceneControlButtons', (controls) => {
+    if (game?.version?.startsWith('13')) {
+      console.log("VERSIONE 13")
+      // --- v13 --- 
+      if (game.user.isGM && controls?.tokens?.tools) {
+        controls.tokens.tools.youtube = { 
+          name:'youtube',
+          title:'YouTube Sync',
+          icon:'fa-solid fa-play',
+          visible: true,
+          onClick: () => this.openYouTubeDialog(), 
+          button: true
+        };
+      }
+    } else {
+      // --- v11-12 --- 
+       if (game.user.isGM) {
         const tokenTools = controls.find(c => c.name === 'token');
         if (tokenTools) {
           tokenTools.tools.push({
@@ -77,15 +92,16 @@ class YouTubeSync {
             button: true
           });
         }
-      }  
-    });
-    
-    Hooks.on('ready', () => {
-      this._loadYouTubeAPI();
-      if (!game.user.isGM) {
-      }
-    });
-  }
+      } 
+    }
+  });
+  
+  Hooks.on('ready', () => {
+    this._loadYouTubeAPI();
+    if (!game.user.isGM) {
+    }
+  });
+}
   
   static _loadYouTubeAPI() {
     if (!window.YT || !window.YT.Player) {
