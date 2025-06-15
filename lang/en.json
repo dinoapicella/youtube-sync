@@ -1,24 +1,41 @@
 {
-  "youtube-sync": {
-    "settings": {
-      "apiKey": {
-        "name": "YouTube API Key",
-        "hint": "Optional: Enter your YouTube API key for advanced features. Currently, this is not required."
-      }
-    },
-    "dialog": {
-      "title": "YouTube Sync",
-      "urlLabel": "Youtube URL:",
-      "playButton": "Play",
-      "cancelButton": "Cancel"
-    },
-    "controls": {
-      "play": "Play",
-      "pause": "Pause",
-      "stop": "Stop"
-    },
-    "errors": {
-      "invalidUrl": "Youtube URL not valid"
+    "youtube-sync": {
+        "settings": {
+            "bgColorPrimary": {
+                "name": "Primary Background Color",
+                "hint": "Primary color for background gradient (hex format)\nDefault is: #667eea"
+            },
+            "bgColorSecondary": {
+                "name": "Secondary Background Color",
+                "hint": "Secondary color for background gradient (hex format)\nDefault is: #764ba2"
+            },
+            "textColor": {
+                "name": "Text Color",
+                "hint": "Main text color (hex format)\nDefault is: #ffffff"
+            },
+            "accentColor": {
+                "name": "Buttons Color",
+                "hint": "Buttons and highlights color (hex format)\nDefault is: #FF6B6B"
+            }
+        },
+        "dialog": {
+            "title": "YouTube Sync",
+            "urlLabel": "YouTube video URL",
+            "playButton": "Play",
+            "cancelButton": "Cancel",
+            "placeholder": "Enter YouTube URL here…",
+            "love": {
+                "question": "Do you like this plugin?",
+                "linkKOFI": "Buy me a coffee on Ko-fi"
+            }
+        },
+        "controls": {
+            "play": "Play",
+            "pause": "Pause",
+            "stop": "Stop"
+        },
+        "errors": {
+            "invalidUrl": "Invalid YouTube URL"
+        }
     }
-  }
 }

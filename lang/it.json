@@ -1,24 +1,41 @@
 {
-  "youtube-sync": {
-    "settings": {
-      "apiKey": {
-        "name": "YouTube API Key",
-        "hint": "Opzionale: Inserisci la tua YouTube API key per funzionalità avanzate. Allo stato attuale non serve"
-      }
-    },
-    "dialog": {
-      "title": "YouTube Sync",
-      "urlLabel": "URL del video di YouTube:",
-      "playButton": "Riproduci",
-      "cancelButton": "Annulla"
-    },
-    "controls": {
-      "play": "Play",
-      "pause": "Pausa",
-      "stop": "Stop"
-    },
-    "errors": {
-      "invalidUrl": "URL di YouTube non valido"
+    "youtube-sync": {
+        "settings": {
+            "bgColorPrimary": {
+                "name": "Colore Sfondo Primario",
+                "hint": "Colore principale del gradiente di sfondo (formato hex)\n Il valore di default è: #667eea"
+            },
+            "bgColorSecondary": {
+                "name": "Colore Sfondo Secondario",
+                "hint": "Colore secondario del gradiente di sfondo (formato hex)\n Il valore di default è: ##764ba2"
+            },
+            "textColor": {
+                "name": "Colore Testo",
+                "hint": "Colore del testo principale (formato hex)\n Il valore di default è: #ffffff"
+            },
+            "accentColor": {
+                "name": "Colore Bottoni",
+                "hint": "Colore per pulsanti e accenti (formato hex)\n Il valore di default è: #FF6B6B"
+            }
+        },
+        "dialog": {
+            "title": "YouTube Sync",
+            "urlLabel": "URL del video di YouTube:",
+            "playButton": "Riproduci",
+            "cancelButton": "Annulla",
+            "placeholder": "Inserisci qui l'URL di YouTube...",
+            "love": {
+                "question": "Ti piace il modulo?",
+                "linkKOFI": "Offrimi un caffè su Ko-fi"
+            }
+        },
+        "controls": {
+            "play": "Play",
+            "pause": "Pausa",
+            "stop": "Stop"
+        },
+        "errors": {
+            "invalidUrl": "URL di YouTube non valido"
+        }
     }
-  }
 }

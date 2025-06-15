@@ -1,0 +1,41 @@
+{
+    "youtube-sync": {
+        "settings": {
+            "bgColorPrimary": {
+                "name": "Color de fondo principal",
+                "hint": "Color principal para el degradado de fondo (hex)\n Por defecto: #667eea"
+            },
+            "bgColorSecondary": {
+                "name": "Color de fondo secundario",
+                "hint": "Segundo color para el degradado de fondo (hex)\n Por defecto: #764ba2"
+            },
+            "textColor": {
+                "name": "Color de texto",
+                "hint": "Color principal del texto (hex)\n Por defecto: #ffffff"
+            },
+            "accentColor": {
+                "name": "Color de botones",
+                "hint": "Color de botones y acentos (hex)\n Por defecto: #FF6B6B"
+            }
+        },
+        "dialog": {
+            "title": "Sincronización de YouTube",
+            "urlLabel": "URL de vídeo de YouTube:",
+            "playButton": "Reproducir",
+            "cancelButton": "Cancelar",
+            "placeholder": "Pegue aquí la URL de YouTube…",
+            "love": {
+                "question": "¿Le gusta el módulo?",
+                "linkKOFI": "Invítame a un café en Ko-fi"
+            }
+        },
+        "controls": {
+            "play": "Reproducir",
+            "pause": "Pausa",
+            "stop": "Detener"
+        },
+        "errors": {
+            "invalidUrl": "URL de YouTube no válida"
+        }
+    }
+}

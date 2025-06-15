@@ -1,38 +1,65 @@
 {
-    "id": "youtube-sync",
-    "title": "YouTube Sync",
-    "description": "This module allows sharing and synchronizing YouTube videos between GMs and players",
-    "version": "1.0.0",
-    "compatibility": {
-        "minimum": "12.331",
-        "verified": "12.331"
-    },
-    "authors": [
-        {
-            "name": "dinoapicella",
-            "flags": {}
-        }
-    ],
-    "languages": [
-        {
-            "lang": "en",
-            "name": "English",
-            "path": "lang/en.json"
-        },
-        {
-            "lang": "it",
-            "name": "Italiano",
-            "path": "lang/it.json"
-        }
-    ],
-    "esmodules": [
-        "scripts/youtube-sync.js"
-    ],
-    "styles": [
-        "styles/youtube-sync.css"
-    ],
-    "socket": true,
-    "url": "https://github.com/dinoapicella/foundry-youtube-sync",
-    "manifest": "https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.0/module.json",
-    "download": "https://github.com/dinoapicella/youtube-sync/releases/download/1.0.0/module.zip"
+   "id":"youtube-sync",
+   "title":"YouTube Sync",
+   "description":"This module allows sharing and synchronizing YouTube videos between GMs and players",
+   "version":"1.0.0",
+   "compatibility":{
+      "minimum":"12.331",
+      "verified":"12.331"
+   },
+   "authors":[
+      {
+         "name":"dinoapicella",
+         "flags":{
+            
+         }
+      }
+   ],
+   "languages":[
+      {
+         "lang":"en",
+         "name":"English",
+         "path":"lang/en.json"
+      },
+      {
+         "lang":"it",
+         "name":"Italiano",
+         "path":"lang/it.json"
+      },
+      {
+         "lang":"fr",
+         "name":"Français",
+         "path":"lang/fr.json"
+      },
+      {
+         "lang":"de",
+         "name":"Deutsch",
+         "path":"lang/de.json"
+      },
+      {
+         "lang":"es",
+         "name":"Español",
+         "path":"lang/es.json"
+      },
+      {
+         "lang":"pt",
+         "name":"Português (Brasil)",
+         "path":"lang/pt.json"
+      },
+      {
+         "lang":"ru",
+         "name":"Русский",
+         "path":"lang/ru.json"
+      }
+   ],
+   "esmodules":[
+      "scripts/youtube-sync.js"
+   ],
+   "styles":[
+      ""
+   ],
+   "socket":true,
+   "url":"https://github.com/dinoapicella/foundry-youtube-sync",
+   "manifest":"https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.0/module.json",
+   "download":"https://github.com/dinoapicella/youtube-sync/releases/download/1.0.0/module.zip"
 }

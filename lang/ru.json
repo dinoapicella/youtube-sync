@@ -1,0 +1,41 @@
+{
+    "youtube-sync": {
+        "settings": {
+            "bgColorPrimary": {
+                "name": "Основной цвет фона",
+                "hint": "Основной цвет градиента фона (hex)\n По умолчанию: #667eea"
+            },
+            "bgColorSecondary": {
+                "name": "Дополнительный цвет фона",
+                "hint": "Дополнительный цвет градиента фона (hex)\n По умолчанию: #764ba2"
+            },
+            "textColor": {
+                "name": "Цвет текста",
+                "hint": "Основной цвет текста (hex)\n По умолчанию: #ffffff"
+            },
+            "accentColor": {
+                "name": "Цвет кнопок",
+                "hint": "Цвет кнопок и акцентов (hex)\n По умолчанию: #FF6B6B"
+            }
+        },
+        "dialog": {
+            "title": "Синхронизация с YouTube",
+            "urlLabel": "URL видео YouTube:",
+            "playButton": "Воспроизводить",
+            "cancelButton": "Отмена",
+            "placeholder": "Вставите URL YouTube здесь…",
+            "love": {
+                "question": "Нравится ли вам модуль?",
+                "linkKOFI": "Угостите чашкой кофе на Ko-fi"
+            }
+        },
+        "controls": {
+            "play": "Воспроизводить",
+            "pause": "Пауза",
+            "stop": "Остановить"
+        },
+        "errors": {
+            "invalidUrl": "Неверный URL YouTube"
+        }
+    }
+}

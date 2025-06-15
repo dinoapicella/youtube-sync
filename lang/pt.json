@@ -1,0 +1,41 @@
+{
+    "youtube-sync": {
+        "settings": {
+            "bgColorPrimary": {
+                "name": "Cor de fundo primária",
+                "hint": "Cor principal para o gradiente de fundo (hex)\n Padrão: #667eea"
+            },
+            "bgColorSecondary": {
+                "name": "Cor de fundo secundária",
+                "hint": "Segunda cor para o gradiente de fundo (hex)\n Padrão: #764ba2"
+            },
+            "textColor": {
+                "name": "Cor do texto",
+                "hint": "Cor principal do texto (hex)\n Padrão: #ffffff"
+            },
+            "accentColor": {
+                "name": "Cor dos botões",
+                "hint": "Cor para botões e destaques (hex)\n Padrão: #FF6B6B"
+            }
+        },
+        "dialog": {
+            "title": "Sincronização YouTube",
+            "urlLabel": "URL do vídeo do YouTube:",
+            "playButton": "Reproduzir",
+            "cancelButton": "Cancelar",
+            "placeholder": "Cole a URL do YouTube aqui…",
+            "love": {
+                "question": "Gostou do módulo?",
+                "linkKOFI": "Pague um café pra mim no Ko-fi"
+            }
+        },
+        "controls": {
+            "play": "Reproduzir",
+            "pause": "Pausa",
+            "stop": "Parar"
+        },
+        "errors": {
+            "invalidUrl": "URL do YouTube inválida"
+        }
+    }
+}
