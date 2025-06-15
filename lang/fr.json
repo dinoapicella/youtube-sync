@@ -1,0 +1,41 @@
+{
+    "youtube-sync": {
+        "settings": {
+            "bgColorPrimary": {
+                "name": "Couleur de fond principale",
+                "hint": "Couleur principale du dégradé d'arrière-plan (hex)\n La valeur par défaut est : #667eea"
+            },
+            "bgColorSecondary": {
+                "name": "Couleur de fond secondaire",
+                "hint": "Couleur secondaire du dégradé d'arrière-plan (hex)\n La valeur par défaut est : #764ba2"
+            },
+            "textColor": {
+                "name": "Couleur du texte",
+                "hint": "Couleur du texte principal (hex)\n La valeur par défaut est : #ffffff"
+            },
+            "accentColor": {
+                "name": "Couleur des boutons",
+                "hint": "Couleur des boutons et des accents (hex)\n La valeur par défaut est : #FF6B6B"
+            }
+        },
+        "dialog": {
+            "title": "Synchronisation YouTube",
+            "urlLabel": "URL de la vidéo YouTube :",
+            "playButton": "Lire",
+            "cancelButton": "Annuler",
+            "placeholder": "Collez l'URL YouTube…",
+            "love": {
+                "question": "Aimez-vous ce plugin ?",
+                "linkKOFI": "Offrez-moi un café sur Ko-fi"
+            }
+        },
+        "controls": {
+            "play": "Lire",
+            "pause": "Pause",
+            "stop": "Arrêter"
+        },
+        "errors": {
+            "invalidUrl": "URL YouTube non valide"
+        }
+    }
+}

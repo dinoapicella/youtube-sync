@@ -16,21 +16,49 @@ class YouTubeSync {
   }
   
   static registerSettings() {
-    game.settings.register(this.ID, 'apiKey', {
-      name: 'YouTube API Key',
-      hint: 'Optional',
-      scope: 'world',
-      config: true,
-      type: String,
-      default: ''
-    });
-    
     game.settings.register(this.ID, 'minimizedState', {
       name: 'Stato minimizzato',
       scope: 'client',
       config: false,
       type: Boolean,
       default: false
+    });
+
+    // Style settings
+    game.settings.register(this.ID, 'bgColorPrimary', {
+      name: game.i18n.localize('youtube-sync.bgColorPrimary.name'),
+      hint: game.i18n.localize('youtube-sync.bgColorPrimary.hint'),
+      scope: 'client',
+      config: true,
+      type: String,
+      default: '#667eea'
+    });
+
+    game.settings.register(this.ID, 'bgColorSecondary', {
+      name: game.i18n.localize('youtube-sync.bgColorSecondary.name'),
+      hint: game.i18n.localize('youtube-sync.bgColorSecondary.hint'),
+      scope: 'client',
+      config: true,
+      type: String,
+      default: '#764ba2'
+    });
+
+    game.settings.register(this.ID, 'textColor', {
+      name: game.i18n.localize('youtube-sync.textColor.name'),
+      hint: game.i18n.localize('youtube-sync.textColor.hint'),
+      scope: 'client',
+      config: true,
+      type: String,
+      default: '#ffffff'
+    });
+
+    game.settings.register(this.ID, 'accentColor', {
+      name: game.i18n.localize('youtube-sync.accentColor.name'),
+      hint: game.i18n.localize('youtube-sync.accentColor.hint'),
+      scope: 'client',
+      config: true,
+      type: String,
+      default: '#FF6B6B'
     });
   }
   
@@ -101,54 +129,199 @@ class YouTubeSync {
   }
   
   static openYouTubeDialog() {
+    // Get custom colors from settings
+    const bgPrimary = game.settings.get(this.ID, 'bgColorPrimary');
+    const bgSecondary = game.settings.get(this.ID, 'bgColorSecondary');
+    const textColor = game.settings.get(this.ID, 'textColor');
+    const accentColor = game.settings.get(this.ID, 'accentColor');
+
     new Dialog({
-      title: 'YouTube Sync',
+      title: '🎬 YouTube Sync Player',
       content: `
         <form class="youtube-url-form">
           <div class="form-group">
-            <label>YouTube URL:</label>
+            <label class="elegant-label">
+              <i class="fab fa-youtube youtube-pulse"></i>
+              YouTube URL
+            </label>
             <div class="youtube-url-input-wrapper">
-              <i class="fab fa-youtube youtube-icon"></i>
-              <input type="text" name="youtubeUrl" placeholder="Insert here Youtube URL...">
+              <input type="text" name="youtubeUrl" placeholder="${game.i18n.localize('youtube-sync.dialog.placeholder')}"
+              class="elegant-input">
+              <div class="input-glow"></div>
             </div>
           </div>
+          
+          <div class="support-section">
+            <div class="heart-beat">❤️</div>
+            <span>${game.i18n.localize('youtube-sync.dialog.love.question')}</span>
+            <a href="https://ko-fi.com/dinoapicella" target="_blank" class="kofi-link">
+              <i class="fas fa-coffee coffee-bounce"></i>
+              ${game.i18n.localize('youtube-sync.dialog.love.linkKOFI')}
+            </a>
+          </div>
         </form>
+        
         <style>
-          .youtube-url-form {
-            padding: 10px;
-            border-radius: 8px;
-            background: #f8f8f8;
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
           }
-          .youtube-url-input-wrapper {
+          
+          @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px ${accentColor}80; }
+            50% { box-shadow: 0 0 20px ${accentColor}CC, 0 0 30px ${accentColor}99; }
+          }
+          
+          @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+          }
+          
+          @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+          }
+          
+          @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+          }
+          
+          .youtube-url-form {
+            padding: 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, ${bgPrimary} 0%, ${bgSecondary} 100%);
             position: relative;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+          }
+          
+          .youtube-url-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 2s infinite;
+          }
+          
+          .elegant-label {
             display: flex;
             align-items: center;
+            gap: 10px;
+            color: ${textColor};
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
           }
-          .youtube-icon {
-            position: absolute;
-            left: 10px;
+          
+          .youtube-pulse {
             color: #FF0000;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
+          }
+          
+          .youtube-url-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+          }
+          
+          .elegant-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            font-size: 1em;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-sizing: border-box;
+          }
+          
+          .elegant-input:focus {
+            outline: none;
+            border-color: ${accentColor};
+            background: rgba(255,255,255,0.95);
+            transform: translateY(-2px);
+            animation: glow 2s infinite;
+          }
+          
+          .elegant-input::placeholder {
+            color: #666;
+            font-style: italic;
+          }
+          
+          .input-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 25px;
+            background: linear-gradient(45deg, ${accentColor}, ${accentColor}AA);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+          }
+          
+          .elegant-input:focus + .input-glow {
+            opacity: 0.2;
+          }
+          
+          .support-section {
+            text-align: center;
+            color: ${textColor};
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+          }
+          
+          .heart-beat {
+            animation: heartbeat 1.5s infinite;
             font-size: 1.2em;
           }
-          .youtube-url-form input[name="youtubeUrl"] {
-            padding: 10px 10px 10px 35px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            width: 100%;
-            font-size: 1.1em;
+          
+          .kofi-link {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: 600;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
           }
-          .youtube-url-form input[name="youtubeUrl"]:focus {
-            border-color: #FF0000;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
-            outline: none;
+          
+          .kofi-link:hover {
+            color: #FFA500;
+            transform: translateY(-2px);
+            text-shadow: 0 4px 8px rgba(255,215,0,0.4);
+          }
+          
+          .coffee-bounce {
+            animation: bounce 2s infinite;
           }
         </style>
       `,
       buttons: {
         play: {
           icon: '<i class="fas fa-play"></i>',
-          label: 'Play',
+          label: game.i18n.localize('youtube-sync.dialog.playButton'),
           callback: (html) => {
             const url = html.find('input[name="youtubeUrl"]').val();
             const videoId = this.extractVideoId(url);
@@ -156,13 +329,13 @@ class YouTubeSync {
               this.createPlayerWindow(videoId);
               this.broadcastVideo(videoId);
             } else {
-              ui.notifications.error('URL not valid');
+              ui.notifications.error(game.i18n.localize('youtube-sync.errors.invalidUrl'));
             }
           }
         },
         cancel: {
           icon: '<i class="fas fa-times"></i>',
-          label: 'Cancel'
+          label: game.i18n.localize('youtube-sync.dialog.cancelButton')
         }
       },
       default: 'play',
@@ -245,29 +418,28 @@ class YouTubePlayerApp extends Application {
     this.player = null;
     this.apiReady = false;
     this.currentVolume = 100;
-    this.isMinimized = true; // Always start minimized
+    this.isMinimized = true;
     this.videoTitle = "";
     this.videoThumbnail = "";
   }
 
   static get defaultOptions() {
-    // Calculate minimum dimensions based on 16:9 aspect ratio
-    const minHeight = 180; // Minimum height we want for the video
-    const minWidth = Math.ceil(minHeight * (16/9)); // Calculate width to maintain aspect ratio
-    const gmExtraHeight = 30; // Extra height for GM controls
-    const gmExtraSize = 80; // Extra size for GM window (increased from 100)
-    const clientExtraHeight = 0; // Extra height for client window
+    const minHeight = 180;
+    const minWidth = Math.ceil(minHeight * (16/9));
+    const gmExtraHeight = 60; // Increased for better control layout
+    const gmExtraSize = 80;
+    const clientExtraHeight = 60; // Controls visible for all clients
     
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: 'youtube-player-window', 
-      title: 'YouTube Sync Player',
+      title: '🎬 YouTube Sync',
       template: YouTubeSync.TEMPLATES.youtubePlayer,
-      width: game.user.isGM ? minWidth + gmExtraSize : minWidth,
-      height: game.user.isGM ? minHeight + gmExtraHeight + gmExtraSize : minHeight + clientExtraHeight,
-      resizable: false, // Disable resizing for everyone
+      width: minWidth + gmExtraSize,
+      height: minHeight + gmExtraHeight + gmExtraSize,
+      resizable: false,
       popOut: true,
       minimizable: false,
-      classes: ['youtube-sync-window'],
+      classes: ['youtube-sync-window', 'elegant-window'],
       closeOnDblClick: false
     });
   }
@@ -300,19 +472,27 @@ class YouTubePlayerApp extends Application {
         try {
           const data = this.player.getVideoData();
           this.videoTitle = data.title || "YouTube video";
-          this.element.find('.window-title').text(this.videoTitle);
+          this.element.find('.window-title').text('🎬 ' + this.videoTitle);
         } catch (e) {
           console.warn("fetchvideoinfo error :", e);
         }
       }
     }, 1000);
     
-    // minified thumbnail
     this.videoThumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
   }
   
   activateListeners(html) {
     super.activateListeners(html);
+    
+    // Get custom colors from settings
+    const bgPrimary = game.settings.get(YouTubeSync.ID, 'bgColorPrimary');
+    const bgSecondary = game.settings.get(YouTubeSync.ID, 'bgColorSecondary');
+    const textColor = game.settings.get(YouTubeSync.ID, 'textColor');
+    const accentColor = game.settings.get(YouTubeSync.ID, 'accentColor');
+    
+    // Add elegant window styling
+    this._addElegantStyling(html, bgPrimary, bgSecondary, textColor, accentColor);
     
     // Prevent double-click minimization
     html.find('.window-header').on('dblclick', (event) => {
@@ -321,120 +501,173 @@ class YouTubePlayerApp extends Application {
       return false;
     });
     
-    // Prevent window from being minimized by double-clicking the title
     html.find('.window-title').on('dblclick', (event) => {
       event.preventDefault();
       event.stopPropagation();
       return false;
     });
     
-    // Make header more compact
-    html.find('.window-header').css({
-      'padding': '2px 5px',
-      'height': '20px',
-      'cursor': 'move'
-    });
-    
-    // Calculate minimum dimensions based on aspect ratio
     const minHeight = 180;
     const minWidth = Math.ceil(minHeight * (16/9));
-    const controlsHeight = 30; // Height for GM controls
-    const playerExtraHeight = 20; // Extra height for player
-    const clientExtraHeight = 200; // Extra height for client window
+    const controlsHeight = 60;
+    const playerExtraHeight = 20;
+    const actualControlsHeight = game.user.isGM ? 40 : controlsHeight;
     
-    // Make window content more compact
     html.find('.window-content').css({
       'padding': '0',
-      'height': (game.user.isGM ? minHeight + controlsHeight + 200 : minHeight + clientExtraHeight) + 'px',
+      'height': (minHeight + controlsHeight + 200) + 'px',
       'overflow': 'hidden',
       'min-height': minHeight + 'px',
-      'position': 'relative'
+      'position': 'relative',
+      'background': `linear-gradient(135deg, ${bgPrimary} 0%, ${bgSecondary} 100%)`
     });
     
-    // Ensure player container is properly sized
     html.find('#youtube-player').css({
       'width': '100%',
-      'height': 'calc(100% - ' + (game.user.isGM ? controlsHeight : 0) + 'px + ' + playerExtraHeight + 'px)',
+      'height': 'calc(100% - ' + controlsHeight + 'px + ' + playerExtraHeight + 'px)',
       'overflow': 'hidden',
       'min-height': minHeight + playerExtraHeight + 'px',
-      'position': 'relative'
+      'position': 'relative',
+      'border-radius': '10px 10px 0 0',
+      'box-shadow': '0 4px 15px rgba(0,0,0,0.3)'
     });
 
-    // Style GM controls
+    // Style controls for ALL users (GM and clients)
+    html.find('.youtube-controls').css({
+      'position': 'absolute',
+      'bottom': '-3px',
+      'left': '0',
+      'right': '0',
+      'background': 'linear-gradient(135deg, rgba(0,0,0,0.9), rgba(30,30,30,0.9))',
+      'backdrop-filter': 'blur(10px)',
+      'padding': '15px',
+      'z-index': '1000',
+      'display': 'flex',
+      'justify-content': 'center',
+      'align-items': 'center',
+      'gap': '15px',
+      'width': '100%',
+      'box-sizing': 'border-box',
+      'height': actualControlsHeight + 'px',
+      'border-radius': '0 0 10px 10px'
+    });
+
+    // Enhanced control buttons for everyone
+    html.find('.youtube-control').css({
+      'padding': '10px 15px',
+      'font-size': '1em',
+      'border': '2px solid transparent',
+      'border-radius': '25px',
+      'background': `linear-gradient(135deg, ${accentColor}, ${accentColor}CC)`,
+      'color': textColor,
+      'cursor': 'pointer',
+      'transition': 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      'box-shadow': `0 4px 15px ${accentColor}66`,
+      'position': 'relative',
+      'overflow': 'hidden'
+    });
+
+    // Add hover effects and click animations with custom colors
+    html.find('.youtube-control').hover(
+      function() {
+        $(this).css({
+          'transform': 'translateY(-3px) scale(1.05)',
+          'box-shadow': `0 8px 25px ${accentColor}99`,
+          'background': `linear-gradient(135deg, ${accentColor}CC, ${accentColor})`
+        });
+      },
+      function() {
+        $(this).css({
+          'transform': 'translateY(0) scale(1)',
+          'box-shadow': `0 4px 15px ${accentColor}66`,
+          'background': `linear-gradient(135deg, ${accentColor}, ${accentColor}CC)`
+        });
+      }
+    );
+
+    html.find('.youtube-control').on('click', function() {
+      $(this).css('transform', 'scale(0.95)');
+      setTimeout(() => {
+        $(this).css('transform', 'translateY(-3px) scale(1.05)');
+      }, 150);
+    });
+
+    // Volume control styling (only for GM)
     if (game.user.isGM) {
-      html.find('.youtube-controls').css({
-        'position': 'absolute',
-        'bottom': '0',
-        'left': '0',
-        'right': '0',
-        'background': 'rgba(0, 0, 0, 0.7)',
-        'padding': '5px',
-        'z-index': '1000',
-        'display': 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
-        'gap': '5px',
-        'width': '100%',
-        'box-sizing': 'border-box',
-        'height': controlsHeight + 'px'
+      html.find('#youtube-volume').css({
+        'appearance': 'none',
+        'width': '100px',
+        'height': '5px',
+        'border-radius': '5px',
+        'background': 'linear-gradient(90deg, #333, #666)',
+        'outline': 'none',
+        'cursor': 'pointer'
       });
 
-      // Make controls more compact
-      html.find('.youtube-control').css({
-        'padding': '2px 5px',
-        'font-size': '0.8em'
+      html.find('#youtube-volume::-webkit-slider-thumb').css({
+        'appearance': 'none',
+        'width': '20px',
+        'height': '20px',
+        'border-radius': '50%',
+        'background': `linear-gradient(135deg, ${accentColor}, ${accentColor}CC)`,
+        'cursor': 'pointer',
+        'box-shadow': `0 2px 10px ${accentColor}80`
       });
 
-      html.find('.youtube-control').on('click', this._onControlClick.bind(this));
-      html.find('#youtube-volume').on('input', this._onVolumeChange.bind(this));
-    } else {
-      html.find('.youtube-controls').hide();
+      html.find('.volume-value').css({
+        'color': textColor,
+        'font-weight': '600',
+        'text-shadow': '0 2px 4px rgba(0,0,0,0.5)'
+      });
     }
-    
-    // Remove resize handler since resizing is disabled
-    this.element.off('resize');
+
+    html.find('.youtube-control').on('click', this._onControlClick.bind(this));
+    html.find('#youtube-volume').on('input', this._onVolumeChange.bind(this));
     
     this._initPlayer();
   }
   
-  _updateVideoSize() {
-    const playerElement = this.element.find('#youtube-player');
-    if (playerElement.length && this.player) {
-      const containerWidth = playerElement.width();
-      const containerHeight = playerElement.height();
-      
-      // Calculate dimensions based on 16:9 aspect ratio
-      const videoRatio = 16/9;
-      const containerRatio = containerWidth / containerHeight;
-      
-      let width, height;
-      
-      if (containerRatio > videoRatio) {
-        // Container is wider than video
-        height = containerHeight;
-        width = height * videoRatio;
-      } else {
-        // Container is taller than video
-        width = containerWidth;
-        height = width / videoRatio;
-      }
-      
-      // Update iframe size
-      const iframe = playerElement.find('iframe');
-      if (iframe.length) {
-        iframe.css({
-          width: width + 'px',
-          height: height + 'px',
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          border: 'none',
-          margin: '0',
-          padding: '0'
-        });
-      }
-    }
+  _addElegantStyling(html) {
+    // Add keyframes and additional styles
+    const styleSheet = `
+      <style>
+        @keyframes windowSlideIn {
+          from { 
+            opacity: 0; 
+            transform: translateY(-30px) scale(0.9); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+          }
+        }
+        
+        @keyframes controlGlow {
+          0%, 100% { box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+          50% { box-shadow: 0 4px 25px rgba(255,107,107,0.8); }
+        }
+        
+        .elegant-window {
+          animation: windowSlideIn 0.5s ease-out;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .elegant-window .window-header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          border-radius: 15px 15px 0 0;
+        }
+        
+        .youtube-control.playing {
+          animation: controlGlow 2s infinite;
+        }
+      </style>
+    `;
+    
+    html.prepend(styleSheet);
   }
   
   _initPlayer() {
@@ -468,10 +701,10 @@ class YouTubePlayerApp extends Application {
   
   _onPlayerReady(event) {
     console.log("YouTubePlayerApp | Player ready");
-    // Set initial volume
     if (this.player) {
       this.player.setVolume(this.currentVolume);
     }
+    this.fetchVideoInfo(this.videoId);
   }
   
   _onPlayerError(event) {
@@ -480,20 +713,31 @@ class YouTubePlayerApp extends Application {
   }
   
   _onPlayerStateChange(event) {
-    if (!game.user.isGM) return;
+    // Update button states based on player state
+    const playBtn = this.element.find('[data-action="play"]');
+    const pauseBtn = this.element.find('[data-action="pause"]');
     
-    console.log("YouTubePlayerApp | Player state changed:", event.data);
-   
-    if (event.data === YT.PlayerState.PAUSED) {
-      game.socket.emit(YouTubeSync.SOCKET_NAME, {
-        type: 'pauseVideo'
-      });
-    } else if (event.data === YT.PlayerState.PLAYING) {
-      const time = this.player.getCurrentTime();
-      game.socket.emit(YouTubeSync.SOCKET_NAME, {
-        type: 'seekVideo',
-        time: time
-      });
+    if (event.data === YT.PlayerState.PLAYING) {
+      playBtn.removeClass('playing');
+      pauseBtn.addClass('playing');
+      
+      // Only GM broadcasts state changes
+      if (game.user.isGM) {
+        const time = this.player.getCurrentTime();
+        game.socket.emit(YouTubeSync.SOCKET_NAME, {
+          type: 'seekVideo',
+          time: time
+        });
+      }
+    } else if (event.data === YT.PlayerState.PAUSED) {
+      pauseBtn.removeClass('playing');
+      playBtn.addClass('playing');
+      
+      if (game.user.isGM) {
+        game.socket.emit(YouTubeSync.SOCKET_NAME, {
+          type: 'pauseVideo'
+        });
+      }
     }
   }
   
@@ -501,7 +745,6 @@ class YouTubePlayerApp extends Application {
     const volume = parseInt(event.currentTarget.value);
     this.currentVolume = volume;
     
-    // Update volume display text
     const volumeText = $(event.currentTarget).siblings('.volume-value');
     volumeText.text(volume + '%');
     
@@ -517,7 +760,6 @@ class YouTubePlayerApp extends Application {
     if (this.player) {
       this.player.setVolume(volume);
       
-      // Broadcast volume change to other clients
       if (game.user.isGM) {
         game.socket.emit(YouTubeSync.SOCKET_NAME, {
           type: 'volumeChange',
@@ -535,12 +777,24 @@ class YouTubePlayerApp extends Application {
       return;
     }
     
+    // All users can use controls, but only GM broadcasts changes
     switch (action) {
       case 'play':
         this.player.playVideo();
+        if (game.user.isGM) {
+          game.socket.emit(YouTubeSync.SOCKET_NAME, {
+            type: 'seekVideo',
+            time: this.player.getCurrentTime()
+          });
+        }
         break;
       case 'pause':
         this.player.pauseVideo();
+        if (game.user.isGM) {
+          game.socket.emit(YouTubeSync.SOCKET_NAME, {
+            type: 'pauseVideo'
+          });
+        }
         break;
       case 'stop':
         this.player.stopVideo();
