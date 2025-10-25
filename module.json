@@ -2,10 +2,10 @@
    "id":"youtube-sync",
    "title":"YouTube Sync",
    "description":"This module allows sharing and synchronizing YouTube videos between GMs and players",
-   "version":"1.0.1",
+   "version":"1.0.2",
    "compatibility":{
       "minimum":"12.331",
-      "verified":"12.331"
+      "verified":"13.345"
    },
    "authors":[
       {
@@ -58,6 +58,7 @@
    "styles":[],
    "socket":true,
    "url":"https://github.com/dinoapicella/foundry-youtube-sync",
-   "manifest":"https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.1/module.json",
-   "download":"https://github.com/dinoapicella/youtube-sync/releases/download/1.0.1/module.zip"
+   "manifest":"https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.2/module.json",
+   "download":"https://github.com/dinoapicella/youtube-sync/releases/download/1.0.2/module.zip"
 }
+

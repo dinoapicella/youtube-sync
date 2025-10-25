@@ -16,7 +16,9 @@
             "accentColor": {
                 "name": "Color de botones",
                 "hint": "Color de botones y acentos (hex)\n Por defecto: #FF6B6B"
-            }
+            },
+            "youtube-sync.rememberVolume.name": "Recordar volumen",
+            "youtube-sync.rememberVolume.hint": "Recuerda el último ajuste de volumen y lo restaura al abrir un nuevo video"
         },
         "dialog": {
             "title": "Sincronización de YouTube",

@@ -16,7 +16,9 @@
             "accentColor": {
                 "name": "Цвет кнопок",
                 "hint": "Цвет кнопок и акцентов (hex)\n По умолчанию: #FF6B6B"
-            }
+            },
+            "youtube-sync.rememberVolume.name": "Запоминать громкость",
+            "youtube-sync.rememberVolume.hint": "Запоминает последний уровень громкости и восстанавливает его при открытии нового видео"
         },
         "dialog": {
             "title": "Синхронизация с YouTube",

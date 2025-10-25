@@ -13,13 +13,15 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 
 > **Developer's Note:** This module is functional but aesthetically basic. Updates will be infrequent or non-existent due to time constraints between work and personal life. I created this primarily to share a practical solution with the Foundry community that has helped me in my own games.
 
-<p align="center"> <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTBscGRlbTBqbDNjbjI4dDh2czdpMnh3bDFuaXVucG1yODFwdnUycCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cjLqH1e9JRQBxcQitL/giphy.gif" width="800" alt="Example Demo"> </p>
 
----
+<p align="center">
+  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFqYTlyN2x0ZnNwY2lrMzE4aWJsenVhb3NuOHFyNjg5b2Z1d3g2OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PYVVOGU6w8AU8pnVfA/giphy.gif" width="800" alt="Example Demo">
+</p>
 
 ## ✨ Features
 
 - ▶️ Play YouTube videos by simply pasting a URL
+- ▶️ Listen directly to your personal playlists created by you on YouTube.
 - 🔄 Full synchronization between all connected players
 - 🎮 GM has complete control over:
   - Play/Pause/Stop
@@ -36,7 +38,7 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 2. Click "Install Module"
 3. Search for "Foundry YouTube Player" or paste this URL:
    ```
-   https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.1/module.json
+   https://raw.githubusercontent.com/dinoapicella/youtube-sync/refs/tags/1.0.2/module.json
    ```
 4. Click "Install"
 
@@ -52,9 +54,39 @@ A simple Foundry VTT module that allows you to play YouTube videos directly in y
 
 ---
 
+## 🎵 Playlist Usage Guide
+
+Using playlists can make it easier to organize and play music or ambient soundtracks for your sessions — but there are some important details to keep in mind.
+
+### ✅ Supported Playlists
+You can use:
+- **Public playlists** that already exist on YouTube  
+  *(e.g., “Epic Battle Music”, “Tavern Ambience”, etc.)*
+- **Your own playlists** that **you’ve created and set as Public**
+
+Just copy the **URL of a video that is part of that playlist**, and paste it into the input popup — the module will recognize and use the playlist automatically.
+
+### ⚠️ Unsupported Playlists (YouTube Mixes)
+Do **not** use **YouTube Mixes**.  
+These are automatically generated playlists (you’ll see the word *Mix* in the title) that YouTube creates dynamically for each user.  
+Because they are generated on the fly:
+- Each player might receive a **different list of videos**
+- Syncing will **break** between the GM and players
+
+**Example:** The GM might hear “Song A” while a player hears “Song B” because YouTube personalized their Mix differently.
+
+### 💡 Tips
+- Always **create your own public playlist** for consistent playback  
+- Test your playlist before the session to make sure all videos are playable and embeddable  
+- Avoid private or unlisted playlists (YouTube may block playback in embeds)
+
+---
+
 ## ⚠️ Known Issues
 
-- Players can currently pause the video from their end (this is a bug that will be addressed in a future update)
+- Players can currently pause the video from their end
+- Players can change the video when is in a Playlist.  Tell them:  "Don't  touch it ^_^"
+- For playlist pay attention: If you use a video in a mix (Mixes are playlists that YouTube creates for you) then your players will include other videos when you try to change videos. This happens because YouTube generates them automatically. Remember, you need to create your own public playlist.
 - The interface is functional but not aesthetically polished
 - Some controls might be a bit cumbersome to use
 - If a user login when the youtube widget is running they dont see it. The GM MUST restart it
@@ -80,13 +112,14 @@ Additionally, the player cannot be resized due to YouTube's policies, which requ
 ## 💡 Recommendations
 
 ### For Players:
-- Focus on your game without worrying about video controls
+- Focus on your game without worrying about any video controls ( incluse the playlist button )
 - If you experience Error 150, let your GM know so they can try another video
 
 ### For GMs:
 - Use the custom control bar below the video instead of YouTube's native controls
 - Test videos before important sessions to ensure they work for all players
 - Keep alternative videos ready in case of playback issues
+- For Playlist REMEMBER, save your playlist PUBLIC on Youtube and then pick up a video from there and paste into Youtube Sync
 
 ---
 
@@ -94,8 +127,8 @@ Additionally, the player cannot be resized due to YouTube's policies, which requ
 
 | Foundry Version | Module Version | Compatible |
 |-----------------|----------------|------------|
-| V13             | v1.0.1         | ✅          |
-| V12             | v1.0.0/v1.0.1         | ✅          |
+| V13             | v1.0.1/v1.0.2         | ✅          |
+| V12             | v1.0.0/v1.0.1/v1.0.2         | ✅          |
 | V11              | v1.0.0         | ❓ (untested) |
 | V10              | v1.0.0         | ❓ (untested) |
 

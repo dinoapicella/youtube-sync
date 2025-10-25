@@ -16,7 +16,9 @@
             "accentColor": {
                 "name": "Schaltflächenfarbe",
                 "hint": "Farbe für Schaltflächen und Akzente (hex)\n Standard ist: #FF6B6B"
-            }
+            },
+            "youtube-sync.rememberVolume.name": "Lautstärke merken",
+            "youtube-sync.rememberVolume.hint": "Merkt sich die letzte Lautstärkeeinstellung und stellt sie beim Öffnen eines neuen Videos wieder her" 
         },
         "dialog": {
             "title": "YouTube-Synchronisation",

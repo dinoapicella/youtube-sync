@@ -16,7 +16,9 @@
             "accentColor": {
                 "name": "Couleur des boutons",
                 "hint": "Couleur des boutons et des accents (hex)\n La valeur par défaut est : #FF6B6B"
-            }
+            },
+            "youtube-sync.rememberVolume.name": "Mémoriser le volume",
+            "youtube-sync.rememberVolume.hint": "Mémorise le dernier réglage du volume et le restaure lors de l’ouverture d’une nouvelle vidéo"
         },
         "dialog": {
             "title": "Synchronisation YouTube",
