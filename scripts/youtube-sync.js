@@ -24,7 +24,6 @@ class YouTubeSync {
       default: false
     });
 
-    // Style settings
     game.settings.register(this.ID, 'bgColorPrimary', {
       name: game.i18n.localize('youtube-sync.bgColorPrimary.name'),
       hint: game.i18n.localize('youtube-sync.bgColorPrimary.hint'),
@@ -60,47 +59,59 @@ class YouTubeSync {
       type: String,
       default: '#FF6B6B'
     });
+
+    game.settings.register(this.ID, 'lastVolume', {
+      name: 'Last Volume',
+      scope: 'client',
+      config: false,
+      type: Number,
+      default: 100
+    });
+
+    game.settings.register(this.ID, 'rememberVolume', {
+      name: game.i18n.localize('youtube-sync.rememberVolume.name'),
+      hint: game.i18n.localize('youtube-sync.rememberVolume.hint'),
+      scope: 'client',
+      config: true,
+      type: Boolean,
+      default: true
+    });
   }
   
-static hookIntoFoundry() {
-  // ADD YOUTBE BUTTON FOR GMs
- Hooks.on('getSceneControlButtons', (controls) => {
-    if (game?.version?.startsWith('13')) {
-      // --- v13 --- 
-      if (game.user.isGM && controls?.tokens?.tools) {
-        controls.tokens.tools.youtube = { 
-          name:'youtube',
-          title:'YouTube Sync',
-          icon:'fa-solid fa-play',
-          visible: true,
-          onClick: () => this.openYouTubeDialog(), 
-          button: true
-        };
-      }
-    } else {
-      // --- v11-12 --- 
-       if (game.user.isGM) {
-        const tokenTools = controls.find(c => c.name === 'token');
-        if (tokenTools) {
-          tokenTools.tools.push({
-            name: 'youtube',
-            title: 'YouTube Sync',
-            icon: 'fab fa-youtube',
+  static hookIntoFoundry() {
+    Hooks.on('getSceneControlButtons', (controls) => {
+      if (game?.version?.startsWith('13')) {
+        if (game.user.isGM && controls?.tokens?.tools) {
+          controls.tokens.tools.youtube = { 
+            name:'youtube',
+            title:'YouTube Sync',
+            icon:'fa-solid fa-play',
             visible: true,
-            onClick: () => this.openYouTubeDialog(),
+            onClick: () => this.openYouTubeDialog(), 
             button: true
-          });
+          };
         }
-      } 
-    }
-  });
-  
-  Hooks.on('ready', () => {
-    this._loadYouTubeAPI();
-    if (!game.user.isGM) {
-    }
-  });
-}
+      } else {
+        if (game.user.isGM) {
+          const tokenTools = controls.find(c => c.name === 'token');
+          if (tokenTools) {
+            tokenTools.tools.push({
+              name: 'youtube',
+              title: 'YouTube Sync',
+              icon: 'fab fa-youtube',
+              visible: true,
+              onClick: () => this.openYouTubeDialog(),
+              button: true
+            });
+          }
+        } 
+      }
+    });
+    
+    Hooks.on('ready', () => {
+      this._loadYouTubeAPI();
+    });
+  }
   
   static _loadYouTubeAPI() {
     if (!window.YT || !window.YT.Player) {
@@ -139,12 +150,13 @@ static hookIntoFoundry() {
         this.handleCloseVideo();
       } else if (data.type === 'volumeChange') {
         this.handleVolumeChange(data.volume);
+      } else if (data.type === 'playlistVideoChange') {
+        this.handlePlaylistVideoChange(data);
       }
     });
   }
   
   static openYouTubeDialog() {
-    // Get custom colors from settings
     const bgPrimary = game.settings.get(this.ID, 'bgColorPrimary');
     const bgSecondary = game.settings.get(this.ID, 'bgColorSecondary');
     const textColor = game.settings.get(this.ID, 'textColor');
@@ -331,18 +343,77 @@ static hookIntoFoundry() {
           .coffee-bounce {
             animation: bounce 2s infinite;
           }
+
+          /* Stile bottoni migliorato */
+          .dialog-button {
+            padding: 12px 30px !important;
+            border-radius: 30px !important;
+            font-weight: 600 !important;
+            font-size: 1em !important;
+            border: none !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+          }
+
+          .dialog-button.yes {
+            background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+            color: white !important;
+          }
+
+          .dialog-button.yes:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
+          }
+
+          .dialog-button.no {
+            background: linear-gradient(135deg, #f44336, #da190b) !important;
+            color: white !important;
+          }
+
+          .dialog-button.no:hover {
+            background: linear-gradient(135deg, #da190b, #c41700) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4) !important;
+          }
+
+          .dialog-button:active {
+            transform: translateY(0) scale(0.98) !important;
+          }
+
+          .dialog-buttons {
+            display: flex !important;
+            gap: 15px !important;
+            justify-content: center !important;
+            padding-top: 10px !important;
+          }
         </style>
       `,
       buttons: {
         play: {
           icon: '<i class="fas fa-play"></i>',
           label: game.i18n.localize('youtube-sync.dialog.playButton'),
-          callback: (html) => {
+          callback: async (html) => {
             const url = html.find('input[name="youtubeUrl"]').val();
-            const videoId = this.extractVideoId(url);
-            if (videoId) {
-              this.createPlayerWindow(videoId);
-              this.broadcastVideo(videoId);
+            const result = this.extractVideoId(url);
+            if (result) {
+              if (result.type === 'playlist') {
+                if (!result.videoId) {
+                  ui.notifications.info("Caricamento playlist...");
+                  this.createPlayerWindow(null, result.id);
+                  this.broadcastVideo(null, result.id);
+                } else {
+                  this.createPlayerWindow(result.videoId, result.id);
+                  this.broadcastVideo(result.videoId, result.id);
+                }
+              } else {
+                this.createPlayerWindow(result.id);
+                this.broadcastVideo(result.id);
+              }
             } else {
               ui.notifications.error(game.i18n.localize('youtube-sync.errors.invalidUrl'));
             }
@@ -355,6 +426,10 @@ static hookIntoFoundry() {
       },
       default: 'play',
       render: (html) => {
+        // Applica le classi ai bottoni
+        html.find('button[data-button="play"]').addClass('dialog-button yes');
+        html.find('button[data-button="cancel"]').addClass('dialog-button no');
+        
         setTimeout(() => {
           html.find('input[name="youtubeUrl"]').focus();
         }, 100);
@@ -363,36 +438,51 @@ static hookIntoFoundry() {
   }
   
   static extractVideoId(url) {
+    const playlistMatch = url.match(/[?&]list=([^#\&\?]+)/);
+    if (playlistMatch) {
+      const videoMatch = url.match(/[?&]v=([^#\&\?]{11})/);
+      return { 
+        type: 'playlist', 
+        id: playlistMatch[1],
+        videoId: videoMatch ? videoMatch[1] : null
+      };
+    }
+    
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    if (match && match[2].length === 11) {
+      return { type: 'video', id: match[2] };
+    }
+    
+    return null;
   }
   
-  static broadcastVideo(videoId) {
-    console.log(`${this.ID} | Broadcasting video: ${videoId}`);
+  static broadcastVideo(videoId, playlistId = null) {
+    console.log(`${this.ID} | Broadcasting video: ${videoId}, playlist: ${playlistId}`);
     game.socket.emit(this.SOCKET_NAME, {
       type: 'playVideo',
-      videoId: videoId
+      videoId: videoId,
+      playlistId: playlistId
     });
   }
   
-  static createPlayerWindow(videoId = null) {
-    if (!videoId) return;
+  static createPlayerWindow(videoId = null, playlistId = null) {
+    if (!videoId && !playlistId) return;
     
     const existingApp = Object.values(ui.windows).find(w => w.options.id === 'youtube-player-window');
     
     if (existingApp) {
-      existingApp.updateVideo(videoId);
+      existingApp.updateVideo(videoId, playlistId);
       existingApp.render(true);
     } else {
-      const app = new YouTubePlayerApp(videoId);
+      const app = new YouTubePlayerApp(videoId, playlistId);
       app.render(true);
     }
   }
   
   static handlePlayVideo(data) {
     console.log(`${this.ID} | Handling play video:`, data);
-    this.createPlayerWindow(data.videoId);
+    this.createPlayerWindow(data.videoId, data.playlistId);
   }
   
   static handlePauseVideo() {
@@ -406,14 +496,14 @@ static hookIntoFoundry() {
     const existingApp = Object.values(ui.windows).find(w => w.options.id === 'youtube-player-window');
     if (existingApp && existingApp.player) {
       existingApp.player.seekTo(time, true);
-      existingApp.player.playVideo()
+      existingApp.player.playVideo();
     }
   }
   
   static handleCloseVideo() {
     const existingApp = Object.values(ui.windows).find(w => w.options.id === 'youtube-player-window');
     if (existingApp && existingApp.player) {
-      existingApp.player.destroy()
+      existingApp.player.destroy();
       existingApp.close();
     }
   }
@@ -424,26 +514,39 @@ static hookIntoFoundry() {
       existingApp.player.setVolume(volume);
     }
   }
+
+  static handlePlaylistVideoChange(data) {
+    const existingApp = Object.values(ui.windows).find(w => w.options.id === 'youtube-player-window');
+    if (existingApp && existingApp.player) {
+      existingApp.playVideoFromPlaylist(data.index);
+    }
+  }
 }
 
 class YouTubePlayerApp extends Application {
-  constructor(videoId = null) {
+  constructor(videoId = null, playlistId = null) {
     super();
     this.videoId = videoId;
+    this.playlistId = playlistId;
     this.player = null;
     this.apiReady = false;
-    this.currentVolume = 100;
+    this.currentVolume = game.settings.get(YouTubeSync.ID, 'rememberVolume') 
+      ? game.settings.get(YouTubeSync.ID, 'lastVolume') 
+      : 100;
     this.isMinimized = true;
     this.videoTitle = "";
     this.videoThumbnail = "";
+    this.playlistVideos = [];
+    this.currentPlaylistIndex = 0;
+    this.playlistPanelOpen = false;
+    this.needsVideoIdFromPlaylist = !videoId && playlistId;
   }
 
   static get defaultOptions() {
     const minHeight = 180;
     const minWidth = Math.ceil(minHeight * (16/9));
-    const gmExtraHeight = 60; // Increased for better control layout
+    const gmExtraHeight = 60;
     const gmExtraSize = 80;
-    const clientExtraHeight = 60; // Controls visible for all clients
     
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: 'youtube-player-window', 
@@ -462,20 +565,35 @@ class YouTubePlayerApp extends Application {
   getData(options={}) {
     return {
       videoId: this.videoId,
+      playlistId: this.playlistId,
       volume: this.currentVolume,
       isGM: game.user.isGM,
       isMinimized: this.isMinimized,
       videoTitle: this.videoTitle,
-      videoThumbnail: this.videoThumbnail
+      videoThumbnail: this.videoThumbnail,
+      hasPlaylist: this.playlistId || this.playlistVideos.length > 0,
+      playlistVideos: this.playlistVideos,
+      currentPlaylistIndex: this.currentPlaylistIndex,
+      playlistPanelOpen: this.playlistPanelOpen
     };
   }
   
-  updateVideo(videoId) {
+  updateVideo(videoId, playlistId = null) {
     this.videoId = videoId;
+    this.playlistId = playlistId;
+    this.needsVideoIdFromPlaylist = !videoId && playlistId;
     
     if (this.player && this.apiReady) {
-      this.player.loadVideoById(videoId);
-      this.fetchVideoInfo(videoId);
+      if (playlistId) {
+        this.player.loadPlaylist({
+          list: playlistId,
+          listType: 'playlist'
+        });
+        this.loadPlaylistInfo(playlistId);
+      } else if (videoId) {
+        this.player.loadVideoById(videoId);
+        this.fetchVideoInfo(videoId);
+      }
     } else {
       this.render();
     }
@@ -496,20 +614,122 @@ class YouTubePlayerApp extends Application {
     
     this.videoThumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
   }
+
+  async loadPlaylistInfo(playlistId) {
+    try {
+      if (this.player && this.player.getPlaylist) {
+        setTimeout(() => {
+          const playlist = this.player.getPlaylist();
+          if (playlist && playlist.length > 0) {
+            this.playlistVideos = playlist.map((vid, index) => ({
+              id: vid,
+              index: index,
+              title: `Video ${index + 1}`
+            }));
+            this.fetchPlaylistTitles();
+          }
+        }, 1500);
+      }
+    } catch (e) {
+      console.warn("loadPlaylistInfo error:", e);
+    }
+  }
+
+  fetchPlaylistTitles() {
+    this.playlistVideos.forEach((video, index) => {
+      setTimeout(() => {
+        if (this.player && this.player.getPlaylistIndex && this.player.getPlaylistIndex() === index) {
+          const data = this.player.getVideoData();
+          if (data && data.title) {
+            this.playlistVideos[index].title = data.title;
+            this.updatePlaylistUI();
+          }
+        }
+      }, index * 500);
+    });
+  }
+
+  updatePlaylistUI() {
+    if (!this.element) return;
+    
+    const playlistContainer = this.element.find('.playlist-videos');
+    if (playlistContainer.length === 0) return;
+    
+    playlistContainer.empty();
+    
+    this.playlistVideos.forEach((video, index) => {
+      const isActive = index === this.currentPlaylistIndex;
+      const videoItem = $(`
+        <div class="playlist-video-item ${isActive ? 'active' : ''}" data-index="${index}" draggable="true">
+          <span class="playlist-number">${index + 1}</span>
+          <span class="playlist-title">${video.title}</span>
+          ${game.user.isGM ? '<i class="fas fa-grip-vertical drag-handle"></i>' : ''}
+        </div>
+      `);
+      playlistContainer.append(videoItem);
+    });
+    
+    if (game.user.isGM) {
+      this.setupPlaylistDragDrop();
+    }
+  }
+
+  playVideoFromPlaylist(index) {
+    if (!this.player || !this.playlistVideos[index]) return;
+    
+    this.currentPlaylistIndex = index;
+    this.player.playVideoAt(index);
+    this.updatePlaylistUI();
+  }
+
+  setupPlaylistDragDrop() {
+    const items = this.element.find('.playlist-video-item');
+    let draggedIndex = null;
+    
+    items.on('dragstart', (e) => {
+      draggedIndex = parseInt(e.currentTarget.dataset.index);
+      e.currentTarget.style.opacity = '0.5';
+    });
+    
+    items.on('dragend', (e) => {
+      e.currentTarget.style.opacity = '1';
+    });
+    
+    items.on('dragover', (e) => {
+      e.preventDefault();
+    });
+    
+    items.on('drop', (e) => {
+      e.preventDefault();
+      const dropIndex = parseInt(e.currentTarget.dataset.index);
+      
+      if (draggedIndex !== null && draggedIndex !== dropIndex) {
+        const draggedVideo = this.playlistVideos.splice(draggedIndex, 1)[0];
+        this.playlistVideos.splice(dropIndex, 0, draggedVideo);
+        
+        if (this.currentPlaylistIndex === draggedIndex) {
+          this.currentPlaylistIndex = dropIndex;
+        } else if (draggedIndex < this.currentPlaylistIndex && dropIndex >= this.currentPlaylistIndex) {
+          this.currentPlaylistIndex--;
+        } else if (draggedIndex > this.currentPlaylistIndex && dropIndex <= this.currentPlaylistIndex) {
+          this.currentPlaylistIndex++;
+        }
+        
+        this.updatePlaylistUI();
+      }
+    });
+  }
   
   activateListeners(html) {
     super.activateListeners(html);
     
-    // Get custom colors from settings
     const bgPrimary = game.settings.get(YouTubeSync.ID, 'bgColorPrimary');
     const bgSecondary = game.settings.get(YouTubeSync.ID, 'bgColorSecondary');
     const textColor = game.settings.get(YouTubeSync.ID, 'textColor');
     const accentColor = game.settings.get(YouTubeSync.ID, 'accentColor');
     
-    // Add elegant window styling
     this._addElegantStyling(html, bgPrimary, bgSecondary, textColor, accentColor);
     
-    // Prevent double-click minimization
     html.find('.window-header').on('dblclick', (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -523,7 +743,6 @@ class YouTubePlayerApp extends Application {
     });
     
     const minHeight = 180;
-    const minWidth = Math.ceil(minHeight * (16/9));
     const controlsHeight = 60;
     const playerExtraHeight = 20;
     const actualControlsHeight = game.user.isGM ? 40 : controlsHeight;
@@ -547,7 +766,6 @@ class YouTubePlayerApp extends Application {
       'box-shadow': '0 4px 15px rgba(0,0,0,0.3)'
     });
 
-    // Style controls for ALL users (GM and clients)
     html.find('.youtube-controls').css({
       'position': 'absolute',
       'bottom': '-3px',
@@ -567,7 +785,6 @@ class YouTubePlayerApp extends Application {
       'border-radius': '0 0 10px 10px'
     });
 
-    // Enhanced control buttons for everyone
     html.find('.youtube-control').css({
       'padding': '10px 15px',
       'font-size': '1em',
@@ -582,7 +799,6 @@ class YouTubePlayerApp extends Application {
       'overflow': 'hidden'
     });
 
-    // Add hover effects and click animations with custom colors
     html.find('.youtube-control').hover(
       function() {
         $(this).css({
@@ -607,7 +823,6 @@ class YouTubePlayerApp extends Application {
       }, 150);
     });
 
-    // Volume control styling (only for GM)
     if (game.user.isGM) {
       html.find('#youtube-volume').css({
         'appearance': 'none',
@@ -638,12 +853,41 @@ class YouTubePlayerApp extends Application {
 
     html.find('.youtube-control').on('click', this._onControlClick.bind(this));
     html.find('#youtube-volume').on('input', this._onVolumeChange.bind(this));
+
+    // Playlist toggle button (solo per GM)
+    if (game.user.isGM && (this.playlistId || this.playlistVideos.length > 0)) {
+      html.find('.toggle-playlist').on('click', () => {
+        this.playlistPanelOpen = !this.playlistPanelOpen;
+        const panel = html.find('.playlist-panel');
+        const button = html.find('.toggle-playlist i');
+        
+        if (this.playlistPanelOpen) {
+          panel.addClass('open');
+          button.removeClass('fa-chevron-left').addClass('fa-chevron-right');
+        } else {
+          panel.removeClass('open');
+          button.removeClass('fa-chevron-right').addClass('fa-chevron-left');
+        }
+      });
+      
+      // Playlist video click
+      html.on('click', '.playlist-video-item', (e) => {
+        if (!game.user.isGM) return;
+        const index = parseInt(e.currentTarget.dataset.index);
+        this.playVideoFromPlaylist(index);
+        
+        // Broadcast to other clients
+        game.socket.emit(YouTubeSync.SOCKET_NAME, {
+          type: 'playlistVideoChange',
+          index: index
+        });
+      });
+    }
     
     this._initPlayer();
   }
   
   _addElegantStyling(html) {
-    // Add keyframes and additional styles
     const styleSheet = `
       <style>
         @keyframes windowSlideIn {
@@ -686,32 +930,48 @@ class YouTubePlayerApp extends Application {
   }
   
   _initPlayer() {
-    if (!this.videoId) return;
+    if (!this.videoId && !this.playlistId) return;
     
     if (this.player) {
       this.player.destroy();
     }
     
-    this.player = new YT.Player('youtube-player', {
+    const playerVars = {
+      'autoplay': 1,
+      'controls': game.user.isGM ? 1 : 0,  // GM vede controlli, users NO
+      'disablekb': game.user.isGM ? 0 : 1,  // Users non possono usare tastiera
+      'enablejsapi': 1,
+      'rel': 0,
+      'origin': window.location.origin,
+      'modestbranding': 1,
+      'showinfo': 0,
+      'fs': game.user.isGM ? 1 : 0,  // Solo GM può fare fullscreen
+      'iv_load_policy': 3  // Nascondi annotazioni
+    };
+    
+    if (this.playlistId) {
+      playerVars.list = this.playlistId;
+      playerVars.listType = 'playlist';
+    }
+    
+    const config = {
       height: '100%',
       width: '100%',
-      videoId: this.videoId,
-      playerVars: {
-        'autoplay': 1,
-        'controls': game.user.isGM ? 1 : 0,
-        'enablejsapi': 1,
-        'rel': 0,
-        'origin': window.location.origin,
-        'modestbranding': 1,
-        'showinfo': 0,
-        'fs': 0
-      },
+      playerVars: playerVars,
       events: {
         'onReady': this._onPlayerReady.bind(this),
         'onStateChange': this._onPlayerStateChange.bind(this),
         'onError': this._onPlayerError.bind(this)
       }
-    });
+    };
+    
+    if (this.videoId) {
+      config.videoId = this.videoId;
+    } else if (this.playlistId) {
+      config.playerVars.index = 0;
+    }
+    
+    this.player = new YT.Player('youtube-player', config);
   }
   
   _onPlayerReady(event) {
@@ -719,16 +979,28 @@ class YouTubePlayerApp extends Application {
     if (this.player) {
       this.player.setVolume(this.currentVolume);
     }
-    this.fetchVideoInfo(this.videoId);
+    
+    if (this.needsVideoIdFromPlaylist && this.player.getPlaylist) {
+      const playlist = this.player.getPlaylist();
+      if (playlist && playlist.length > 0) {
+        this.videoId = playlist[0];
+        this.needsVideoIdFromPlaylist = false;
+      }
+    }
+    
+    if (this.playlistId) {
+      this.loadPlaylistInfo(this.playlistId);
+    } else if (this.videoId) {
+      this.fetchVideoInfo(this.videoId);
+    }
   }
-  
+
   _onPlayerError(event) {
     console.error("YouTubePlayerApp | Player error:", event.data);
     ui.notifications.error(`Errore YouTube: ${event.data}`);
   }
   
   _onPlayerStateChange(event) {
-    // Update button states based on player state
     const playBtn = this.element.find('[data-action="play"]');
     const pauseBtn = this.element.find('[data-action="pause"]');
     
@@ -736,7 +1008,21 @@ class YouTubePlayerApp extends Application {
       playBtn.removeClass('playing');
       pauseBtn.addClass('playing');
       
-      // Only GM broadcasts state changes
+      if (this.playlistId && this.player.getPlaylistIndex) {
+        const newIndex = this.player.getPlaylistIndex();
+        if (newIndex !== this.currentPlaylistIndex) {
+          this.currentPlaylistIndex = newIndex;
+          this.updatePlaylistUI();
+          
+          if (game.user.isGM) {
+            game.socket.emit(YouTubeSync.SOCKET_NAME, {
+              type: 'playlistVideoChange',
+              index: newIndex
+            });
+          }
+        }
+      }
+      
       if (game.user.isGM) {
         const time = this.player.getCurrentTime();
         game.socket.emit(YouTubeSync.SOCKET_NAME, {
@@ -753,12 +1039,23 @@ class YouTubePlayerApp extends Application {
           type: 'pauseVideo'
         });
       }
+    } else if (event.data === YT.PlayerState.ENDED) {
+      if (this.playlistId && this.currentPlaylistIndex < this.playlistVideos.length - 1) {
+        setTimeout(() => {
+          this.currentPlaylistIndex++;
+          this.updatePlaylistUI();
+        }, 500);
+      }
     }
   }
   
   _onVolumeChange(event) {
     const volume = parseInt(event.currentTarget.value);
     this.currentVolume = volume;
+    
+    if (game.settings.get(YouTubeSync.ID, 'rememberVolume')) {
+      game.settings.set(YouTubeSync.ID, 'lastVolume', volume);
+    }
     
     const volumeText = $(event.currentTarget).siblings('.volume-value');
     volumeText.text(volume + '%');
@@ -792,7 +1089,6 @@ class YouTubePlayerApp extends Application {
       return;
     }
     
-    // All users can use controls, but only GM broadcasts changes
     switch (action) {
       case 'play':
         this.player.playVideo();
