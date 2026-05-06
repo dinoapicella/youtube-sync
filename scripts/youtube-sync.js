@@ -80,33 +80,42 @@ class YouTubeSync {
   
   static hookIntoFoundry() {
     Hooks.on('getSceneControlButtons', (controls) => {
-      if (game?.version?.startsWith('13')) {
-        if (game.user.isGM && controls?.tokens?.tools) {
-          controls.tokens.tools.youtube = { 
-            name:'youtube',
-            title:'YouTube Sync',
-            icon:'fa-solid fa-play',
-            visible: true,
-            onClick: () => this.openYouTubeDialog(), 
-            button: true
-          };
-        }
-      } else {
-        if (game.user.isGM) {
-          const tokenTools = controls.find(c => c.name === 'token');
-          if (tokenTools) {
-            tokenTools.tools.push({
-              name: 'youtube',
-              title: 'YouTube Sync',
-              icon: 'fab fa-youtube',
-              visible: true,
-              onClick: () => this.openYouTubeDialog(),
-              button: true
-            });
-          }
-        } 
-      }
-    });
+  if (!game.user.isGM) return;
+
+  let tokenTools;
+
+  // v14 (object)
+  if (!Array.isArray(controls)) {
+    tokenTools = controls.tokens ?? controls.token;
+
+    if (tokenTools?.tools) {
+      tokenTools.tools.youtube = {
+        name: 'youtube',
+        title: 'YouTube Sync',
+        icon: 'fa-solid fa-play',
+        visible: true,
+        onClick: () => this.openYouTubeDialog(),
+        button: true
+      };
+    }
+  }
+
+  // v13 e precedenti (array)
+  else {
+    tokenTools = controls.find(c => c.name === 'token');
+
+    if (tokenTools?.tools) {
+      tokenTools.tools.push({
+        name: 'youtube',
+        title: 'YouTube Sync',
+        icon: 'fab fa-youtube',
+        visible: true,
+        onClick: () => this.openYouTubeDialog(),
+        button: true
+      });
+    }
+  }
+});
     
     Hooks.on('ready', () => {
       this._loadYouTubeAPI();
